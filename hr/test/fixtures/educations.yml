@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  institution: MyString
+  start_to_finish: MyString
+  achievement: MyString
+  resume: one
+
+two:
+  institution: MyString
+  start_to_finish: MyString
+  achievement: MyString
+  resume: two

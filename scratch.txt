@@ -273,16 +273,55 @@ rails generate controller Educations
 
 
 
-34 app/controllers/work_experiences_controller.rb
-class WorkExperiencesController < ApplicationController
+34 app/controllers/educations_controller.rb
+class EducationsController < ApplicationController
   def create
     @resume = Resume.find(params[:resume_id])
-    @work_experience = @resume.work_experiences.create(work_experience_params)
+    @education = @resume.educations.create(education_params)
     redirect_to resume_path(@resume)
   end
  
   private
-    def work_experience_params
-      params.require(:work_experience).permit(:role_and_website, :start_to_finish, :description)
+    def education_params
+      params.require(:education).permit(:institution, :start_to_finish, :achievement)
     end
 end
+
+
+
+35 app/views/languages/_education.html.erb
+<div class="w3-container">
+  <h5 class="w3-opacity"><b><%= education.institution %></b></h5>
+  <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i><%= education.start_to_finish %></h6>
+  <p><%= education.achievement %></p>
+  <hr>
+</div>
+
+
+
+36 app/views/languages/_form.html.erb
+<%= form_for([@resume, @resume.educations.build]) do |f| %>
+  <p>
+    <%= f.label :institution %><br>
+    <%= f.text_field :institution %>
+  </p>
+  <p>
+    <%= f.label :start_to_finish %><br>
+    <%= f.text_area :start_to_finish %>
+  </p>
+  <p>
+    <%= f.label :achievement %><br>
+    <%= f.text_area :achievement %>
+  </p>
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
+
+
+
+37 app/views/resumes/show.html.erb
+<h2>Add an Education</h2>
+<%= render 'educations/form' %>
+
+<%= render @resume.educations %>
