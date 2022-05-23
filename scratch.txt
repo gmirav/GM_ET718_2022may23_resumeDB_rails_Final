@@ -200,13 +200,13 @@ rails generate controller WorkExperiences
 class WorkExperiencesController < ApplicationController
   def create
     @resume = Resume.find(params[:resume_id])
-    @workexperience = @resume.workexperiences.create(workexperience_params)
+    @work_experience = @resume.work_experiences.create(work_experience_params)
     redirect_to resume_path(@resume)
   end
  
   private
-    def workexperience_params
-      params.require(:workexperience).permit(:role_and_website, :start_to_finish, :description)
+    def work_experience_params
+      params.require(:work_experience).permit(:role_and_website, :start_to_finish, :description)
     end
 end
 
@@ -214,9 +214,9 @@ end
 
 27 app/views/languages/_work_experience.html.erb
 <div class="w3-container">
-  <h5 class="w3-opacity"><b><%= workexperience.role_and_website %></b></h5>
-  <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i><%= workexperience.start_to_finish %></h6>
-  <p><%= workexperience.description %></p>
+  <h5 class="w3-opacity"><b><%= work_experience.role_and_website %></b></h5>
+  <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i><%= work_experience.start_to_finish %></h6>
+  <p><%= work_experience.description %></p>
   <hr>
 </div>
 
@@ -247,4 +247,42 @@ end
 <h2>Add a Work Experience</h2>
 <%= render 'work_experiences/form' %>
 
-<%= render @resume.workexperiences %>
+<%= render @resume.work_experiences %>
+
+
+
+30
+rails generate model Education institution start_to_finish achievement resume:references
+
+
+
+31 app/models/resume.rb
+has_many :educations, dependent: :destroy
+
+
+
+32 config/routes.rb
+resources :resumes do
+  resources :educations
+end
+
+
+
+33
+rails generate controller Educations
+
+
+
+34 app/controllers/work_experiences_controller.rb
+class WorkExperiencesController < ApplicationController
+  def create
+    @resume = Resume.find(params[:resume_id])
+    @work_experience = @resume.work_experiences.create(work_experience_params)
+    redirect_to resume_path(@resume)
+  end
+ 
+  private
+    def work_experience_params
+      params.require(:work_experience).permit(:role_and_website, :start_to_finish, :description)
+    end
+end
