@@ -94,7 +94,15 @@ end
 
 
 
-14 Somehwat repeat 7-13 for Languages
+14.0 app/views/resumes/show.html.erb create "Add a Skill" section and replace the hard-coded Skills table. So:
+<h2>Add a Skill</h2>
+<%= render 'skills/form' %>
+
+<%= render @resume.skills %>
+
+
+
+14.1 Somehwat repeat 7-14.0 for Languages
 rails generate model Language name level resume:references
 
 
@@ -134,9 +142,9 @@ end
 
 
 19 app/views/languages/_language.html.erb
-<p>English</p>
+<p><%= language.name %></p>
 <div class="w3-light-grey w3-round-xlarge">
-  <div class="w3-round-xlarge w3-teal" style="height:24px;width:100%"></div>
+  <div class="w3-round-xlarge w3-teal" style="height:24px;width:<%= language.level %>"></div>
 </div>
 
 
@@ -155,3 +163,11 @@ end
     <%= f.submit %>
   </p>
 <% end %>
+
+
+
+21 app/views/resumes/show.html.erb
+<h2>Add a Language</h2>
+<%= render 'languages/form' %>
+
+<%= render @resume.languages %>
