@@ -1,0 +1,13 @@
+# Read about fixtures at http://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  role_and_website: MyString
+  start_to_finish: MyString
+  description: MyString
+  resume: one
+
+two:
+  role_and_website: MyString
+  start_to_finish: MyString
+  description: MyString
+  resume: two

@@ -171,3 +171,80 @@ end
 <%= render 'languages/form' %>
 
 <%= render @resume.languages %>
+
+
+
+22
+rails generate model WorkExperience role_and_website start_to_finish description resume:references
+
+
+
+23 app/models/resume.rb
+has_many :work_experiences, dependent: :destroy
+
+
+
+24 config/routes.rb
+resources :resumes do
+  resources :work_experiences
+end
+
+
+
+25
+rails generate controller WorkExperiences
+
+
+
+26 app/controllers/work_experiences_controller.rb
+class WorkExperiencesController < ApplicationController
+  def create
+    @resume = Resume.find(params[:resume_id])
+    @workexperience = @resume.workexperiences.create(workexperience_params)
+    redirect_to resume_path(@resume)
+  end
+ 
+  private
+    def workexperience_params
+      params.require(:workexperience).permit(:role_and_website, :start_to_finish, :description)
+    end
+end
+
+
+
+27 app/views/languages/_work_experience.html.erb
+<div class="w3-container">
+  <h5 class="w3-opacity"><b><%= workexperience.role_and_website %></b></h5>
+  <h6 class="w3-text-teal"><i class="fa fa-calendar fa-fw w3-margin-right"></i><%= workexperience.start_to_finish %></h6>
+  <p><%= workexperience.description %></p>
+  <hr>
+</div>
+
+
+
+28 app/views/languages/_form.html.erb
+<%= form_for([@resume, @resume.work_experiences.build]) do |f| %>
+  <p>
+    <%= f.label :role_and_website %><br>
+    <%= f.text_field :role_and_website %>
+  </p>
+  <p>
+    <%= f.label :start_to_finish %><br>
+    <%= f.text_area :start_to_finish %>
+  </p>
+  <p>
+    <%= f.label :description %><br>
+    <%= f.text_area :description %>
+  </p>
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
+
+
+
+29 app/views/resumes/show.html.erb
+<h2>Add a Work Experience</h2>
+<%= render 'work_experiences/form' %>
+
+<%= render @resume.workexperiences %>

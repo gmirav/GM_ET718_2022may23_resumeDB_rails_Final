@@ -1,0 +1,17 @@
+<%= form_for([@resume, @resume.work_experiences.build]) do |f| %>
+  <p>
+    <%= f.label :role_and_website %><br>
+    <%= f.text_field :role_and_website %>
+  </p>
+  <p>
+    <%= f.label :start_to_finish %><br>
+    <%= f.text_area :start_to_finish %>
+  </p>
+  <p>
+    <%= f.label :description %><br>
+    <%= f.text_area :description %>
+  </p>
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
