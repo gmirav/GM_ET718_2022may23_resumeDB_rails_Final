@@ -1,0 +1,157 @@
+scratch.txt
+
+1
+rails new hr
+
+
+
+2
+rails s
+
+
+
+3
+rails generate controller Welcome index
+
+
+
+4 config/routes.rb
+root 'welcome#index'
+
+
+
+5
+rails generate scaffold Resume name avatar role location email phone
+
+
+
+6 app/views/welcome/index.html.erb
+<h1>HR Resume Database</h1>
+<%= link_to 'Resumes', controller: 'resumes' %>
+
+
+
+7
+rails generate model Skill title level resume:references
+
+
+
+8 app/models/resume.rb
+has_many :skills, dependent: :destroy
+
+
+
+9 config/routes.rb
+resources :resumes do
+  resources :skills
+end
+
+
+
+10
+rails generate controller Skills
+
+
+
+11 app/controllers/skills_controller.rb
+class SkillsController < ApplicationController
+  def create
+    @resume = Resume.find(params[:resume_id])
+    @skill = @resume.skills.create(skill_params)
+    redirect_to resume_path(@resume)
+  end
+ 
+  private
+    def skill_params
+      params.require(:skill).permit(:title, :level)
+    end
+end
+
+
+
+12 app/views/skills/_skill.html.erb
+<p><%= skill.title %></p>
+<div class="w3-light-grey w3-round-xlarge w3-small">
+  <div class="w3-container w3-center w3-round-xlarge w3-teal" style="width:<%= skill.level %>"><%= skill.level %></div>
+</div>
+
+
+
+13 app/views/skills/_form.html.erb
+<%= form_for([@resume, @resume.skills.build]) do |f| %>
+  <p>
+    <%= f.label :title %><br>
+    <%= f.text_field :title %>
+  </p>
+  <p>
+    <%= f.label :level %><br>
+    <%= f.text_area :level %>
+  </p>
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
+
+
+
+14 Somehwat repeat 7-13 for Languages
+rails generate model Language name level resume:references
+
+
+
+
+15 app/models/resume.rb
+has_many :languages, dependent: :destroy
+
+
+
+16 config/routes.rb
+resources :resumes do
+  resources :languages
+end
+
+
+
+17
+rails generate controller Languages
+
+
+
+18 app/controllers/languages_controller.rb
+class LanguagesController < ApplicationController
+  def create
+    @resume = Resume.find(params[:resume_id])
+    @language = @resume.languages.create(language_params)
+    redirect_to resume_path(@resume)
+  end
+ 
+  private
+    def language_params
+      params.require(:language).permit(:name, :level)
+    end
+end
+
+
+
+19 app/views/languages/_language.html.erb
+<p>English</p>
+<div class="w3-light-grey w3-round-xlarge">
+  <div class="w3-round-xlarge w3-teal" style="height:24px;width:100%"></div>
+</div>
+
+
+
+20 app/views/languages/_form.html.erb
+<%= form_for([@resume, @resume.languages.build]) do |f| %>
+  <p>
+    <%= f.label :name %><br>
+    <%= f.text_field :name %>
+  </p>
+  <p>
+    <%= f.label :level %><br>
+    <%= f.text_area :level %>
+  </p>
+  <p>
+    <%= f.submit %>
+  </p>
+<% end %>
